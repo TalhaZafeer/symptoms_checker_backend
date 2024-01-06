@@ -10,8 +10,7 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
 
   try {
     const user = await User.login(email, password);
-    const { _doc: use } = { ...user };
-
+    const { password: pwd, ...rest } = user;
     const token = createToken(user?._id);
 
     res.cookie("conduitToken", token, {
@@ -21,7 +20,7 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
       sameSite: "none",
     });
 
-    res.status(200).json(use);
+    res.status(200).json(user);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
