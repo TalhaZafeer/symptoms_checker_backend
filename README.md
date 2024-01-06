@@ -1,1 +1,0 @@
-# symptoms_checker_backend
