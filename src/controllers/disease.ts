@@ -24,7 +24,12 @@ export const checkSymptoms = async (req: Request, res: Response) => {
 
   // Find diseases that match the partial symptoms
   const result = await Disease.find(query).populate("category"); // If you want to populate the category field
-  // .exec();
+  const categories = new Set();
+
+  result.forEach((disease) => categories.add(disease?.category?.id));
+  const catArray = [...categories];
+
+  console.log(catArray);
 
   res.json({ diseases: result });
 
@@ -36,32 +41,32 @@ export const checkSymptoms = async (req: Request, res: Response) => {
   // }
 };
 
-async function searchDiseases(symptoms: string[]) {
-  const result = await Disease.aggregate([
-    {
-      $match: {
-        symptoms: {
-          $all: symptoms.map((symptom) => new RegExp(symptom, "i")),
-        },
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "category",
-        foreignField: "_id",
-        as: "category",
-      },
-    },
-    {
-      $unwind: "$category",
-    },
-    {
-      $replaceRoot: {
-        newRoot: { $mergeObjects: ["$$ROOT", { category: "$category.name" }] },
-      },
-    },
-  ]);
+// async function searchDiseases(symptoms: string[]) {
+//   const result = await Disease.aggregate([
+//     {
+//       $match: {
+//         symptoms: {
+//           $all: symptoms.map((symptom) => new RegExp(symptom, "i")),
+//         },
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "categories",
+//         localField: "category",
+//         foreignField: "_id",
+//         as: "category",
+//       },
+//     },
+//     {
+//       $unwind: "$category",
+//     },
+//     {
+//       $replaceRoot: {
+//         newRoot: { $mergeObjects: ["$$ROOT", { category: "$category.name" }] },
+//       },
+//     },
+//   ]);
 
-  return result;
-}
+//   return result;
+// }

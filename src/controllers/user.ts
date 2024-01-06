@@ -2,7 +2,6 @@ import { Request, RequestHandler, Response } from "express";
 import RequestWithUser from "../interfaces/requestWithUser";
 import { User } from "../models";
 import UserI from "../interfaces/user";
-import bcrypt from "bcrypt";
 import { hashPassword } from "../utils";
 
 export const userData: RequestHandler = async (req: Request, res: Response) => {

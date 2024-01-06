@@ -6,6 +6,7 @@ import cors from "cors";
 
 import { connectDB } from "./config";
 import { authRouter, diseaseRouter, userRouter } from "./routes";
+import categoryRouter from "./routes/categoryRouter";
 
 const { checkUser } = require("./middlewares/auth.middleware");
 
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/check", diseaseRouter);
+app.use("/categories", categoryRouter);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
