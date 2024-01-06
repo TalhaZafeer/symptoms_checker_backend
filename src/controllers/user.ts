@@ -22,10 +22,8 @@ export const findUser: RequestHandler = async (req: Request, res: Response) => {
   const { id } = req.body;
 
   try {
-    const result = await User.findOne<UserI>(id);
-    if (result) {
-      res.status(200).json(result);
-    }
+    const result = await User.findOne<UserI>({ _id: id });
+    res.status(200).json(result);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
