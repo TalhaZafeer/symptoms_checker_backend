@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Disease } from "../models/Disease";
 import { Category } from "../models/Category";
+import { User } from "../models";
 
 export const addDisease = async (req: Request, res: Response) => {
   try {
@@ -29,44 +30,11 @@ export const checkSymptoms = async (req: Request, res: Response) => {
   result.forEach((disease) => categories.add(disease?.category?.id));
   const catArray = [...categories];
 
-  console.log(catArray);
+  const doctors = await User.find({ specialty: { $in: catArray } }).populate(
+    "specialty"
+  );
 
-  res.json({ diseases: result });
+  console.log(doctors);
 
-  // try {
-  //   const result = await searchDiseases(symptoms);
-  //   res.json({ diseases: result });
-  // } catch (error) {
-  //   res.status(500).json({ error: "Internal Server Error" });
-  // }
+  res.json({ diseases: result, doctors });
 };
-
-// async function searchDiseases(symptoms: string[]) {
-//   const result = await Disease.aggregate([
-//     {
-//       $match: {
-//         symptoms: {
-//           $all: symptoms.map((symptom) => new RegExp(symptom, "i")),
-//         },
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "categories",
-//         localField: "category",
-//         foreignField: "_id",
-//         as: "category",
-//       },
-//     },
-//     {
-//       $unwind: "$category",
-//     },
-//     {
-//       $replaceRoot: {
-//         newRoot: { $mergeObjects: ["$$ROOT", { category: "$category.name" }] },
-//       },
-//     },
-//   ]);
-
-//   return result;
-// }

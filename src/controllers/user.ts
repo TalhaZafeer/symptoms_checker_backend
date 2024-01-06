@@ -31,6 +31,20 @@ export const findUser: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
+export const findDoctors: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const result = await User.find({ role: "Doctor" });
+    if (result) {
+      res.status(200).json(result);
+    }
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 export const findCategoryDoctors: RequestHandler = async (
   req: Request,
   res: Response
