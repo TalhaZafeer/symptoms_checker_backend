@@ -12,13 +12,28 @@ export const addDisease = async (req: Request, res: Response) => {
 
 export const checkSymptoms = async (req: Request, res: Response) => {
   const { symptoms } = req.body;
+  const regexPatterns = symptoms.map(
+    (symptom: any) => new RegExp(symptom, "i")
+  );
 
-  try {
-    const result = await searchDiseases(symptoms);
-    res.json({ diseases: result });
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+  const query = {
+    symptoms: {
+      $all: regexPatterns,
+    },
+  };
+
+  // Find diseases that match the partial symptoms
+  const result = await Disease.find(query).populate("category"); // If you want to populate the category field
+  // .exec();
+
+  res.json({ diseases: result });
+
+  // try {
+  //   const result = await searchDiseases(symptoms);
+  //   res.json({ diseases: result });
+  // } catch (error) {
+  //   res.status(500).json({ error: "Internal Server Error" });
+  // }
 };
 
 async function searchDiseases(symptoms: string[]) {

@@ -18,14 +18,31 @@ export const userData: RequestHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
 export const findUser: RequestHandler = async (req: Request, res: Response) => {
   const { id } = req.body;
 
   try {
     const result = await User.findOne<UserI>(id);
     if (result) {
-      const { password, ...rest } = result;
-      res.status(200).json(rest);
+      res.status(200).json(result);
+    }
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const findCategoryDoctors: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { specialty } = req.body;
+
+  try {
+    const result = await User.find<UserI>({ specialty }).populate("specialty");
+
+    if (result) {
+      res.status(200).json(result);
     }
   } catch (error: any) {
     return res.status(500).json({ error: error.message });

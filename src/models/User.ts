@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { model, Schema } from "mongoose";
 import UserI from "../interfaces/user";
 import { hashPassword } from "../utils";
@@ -60,23 +60,23 @@ const UserSchema = new Schema<UserI, UserModel>({
   location: {
     type: String,
   },
-  speciality: {
+  specialty: {
     type: Schema.Types.ObjectId,
     ref: "Category",
   },
 });
 
-UserSchema.pre("save", async function (next) {
-  this.password = await hashPassword(this.password);
-  next();
-});
+// UserSchema.pre("save", async function (next) {
+//   this.password = await hashPassword(this.password);
+//   next();
+// });
 
 //Static Method for login
 
 UserSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email });
+  const user = await this.findOne({ email }).populate("specialty", "name");
   if (user) {
-    const auth = await bcrypt.compare(password, user.password);
+    const auth = password === user.password;
     if (auth) {
       return user;
     }

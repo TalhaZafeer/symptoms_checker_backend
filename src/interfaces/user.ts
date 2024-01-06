@@ -10,15 +10,13 @@ interface UserI {
   password: string;
   role: string;
   location: string;
-  speciality: mongoose.Types.ObjectId;
+  specialty: mongoose.Types.ObjectId;
 }
 
 interface DoctorAvailability {
   days: string[];
   timeSlots: string[];
   service: string[];
-  physicalConsultancy: boolean;
-  onlineConsultancy: boolean;
 }
 
 export default UserI;
