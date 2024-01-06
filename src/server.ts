@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRouter);
-app.use("/user", checkUser, userRouter);
+app.use("/user", userRouter);
 app.use("/check", diseaseRouter);
 
 app.listen(port, () => {
