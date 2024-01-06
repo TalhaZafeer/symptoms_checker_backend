@@ -10,10 +10,10 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
 
   try {
     const user = await User.login(email, password);
-    const { password: pwd, ...rest } = user;
+
     const token = createToken(user?._id);
 
-    res.cookie("conduitToken", token, {
+    res.cookie("token", token, {
       // httpOnly: true,
       maxAge: TOKEN_AGE,
       secure: true,
@@ -29,11 +29,10 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
 export const signup: RequestHandler = async (req: Request, res: Response) => {
   try {
     const user = await User.create(req.body);
-    const { password, ...rest } = user;
 
     const token = createToken(user._id);
 
-    res.cookie("conduitToken", token, {
+    res.cookie("token", token, {
       httpOnly: true,
       maxAge: TOKEN_AGE,
     });

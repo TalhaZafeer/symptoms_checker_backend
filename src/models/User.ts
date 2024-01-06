@@ -50,8 +50,11 @@ const UserSchema = new Schema<UserI, UserModel>({
           type: String,
         },
       ],
-      physicalConsultancy: Boolean,
-      onlineConsultancy: Boolean,
+      service: [
+        {
+          type: String,
+        },
+      ],
     },
   },
   location: {

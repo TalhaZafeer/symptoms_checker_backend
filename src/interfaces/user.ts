@@ -16,6 +16,7 @@ interface UserI {
 interface DoctorAvailability {
   days: string[];
   timeSlots: string[];
+  service: string[];
   physicalConsultancy: boolean;
   onlineConsultancy: boolean;
 }
