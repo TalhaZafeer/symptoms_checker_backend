@@ -1,6 +1,6 @@
 import mongoose, { Model } from "mongoose";
 import { model, Schema } from "mongoose";
-import UserI from "../interfaces/user";
+import UserI, { Appointment } from "../interfaces/user";
 import { hashPassword } from "../utils";
 import bcrypt from "bcrypt";
 
@@ -57,6 +57,18 @@ const UserSchema = new Schema<UserI, UserModel>({
       ],
     },
   },
+  appointments: [
+    {
+      patientName: {
+        type: String,
+        required: true,
+      },
+      appointmentTime: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   location: {
     type: String,
   },

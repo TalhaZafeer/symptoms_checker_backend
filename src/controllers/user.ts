@@ -18,6 +18,40 @@ export const userData: RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
+export const getAvailableSlots: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { doctorId } = req.body;
+  const doctor = await User.findOne<UserI>({ _id: doctorId });
+  const allSlots = doctor?.availability.timeSlots;
+  const appointments = doctor?.appointments.map(
+    (appointment) => appointment.appointmentTime
+  );
+  const availableSlots = allSlots?.filter(
+    (slot) => !appointments?.includes(slot)
+  );
+  res.status(200).json({ allSlots, appointments, availableSlots });
+};
+
+export const bookAppointment: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { doctorId } = req.body;
+  const { patientName, appointmentTime } = req.body;
+  const doctor = await User.findOne({ _id: doctorId });
+
+  const appointments = doctor?.appointments;
+  appointments?.push({
+    patientName,
+    appointmentTime,
+  });
+
+  const result = await User.updateOne({ _id: doctorId }, { appointments });
+  res.status(200).json(result);
+};
+
 export const findUser: RequestHandler = async (req: Request, res: Response) => {
   const { id } = req.body;
 

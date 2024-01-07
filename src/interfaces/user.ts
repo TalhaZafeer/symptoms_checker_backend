@@ -11,6 +11,12 @@ interface UserI {
   role: string;
   location: string;
   specialty: mongoose.Types.ObjectId;
+  appointments: Appointment[];
+}
+
+export interface Appointment {
+  patientName: string;
+  appointmentTime: string;
 }
 
 interface DoctorAvailability {
