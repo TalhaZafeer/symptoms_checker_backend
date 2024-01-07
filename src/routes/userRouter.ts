@@ -12,7 +12,7 @@ import {
 const userRouter = Router();
 
 userRouter.get("/", userData);
-userRouter.get("/profile", findUser);
+userRouter.get("/:id", findUser);
 userRouter.get("/category", findCategoryDoctors);
 userRouter.get("/doctors", findDoctors);
 userRouter.get("/getTimeSlots", getAvailableSlots);

@@ -53,7 +53,8 @@ export const bookAppointment: RequestHandler = async (
 };
 
 export const findUser: RequestHandler = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id } = req.params;
+  console.log(req.params);
 
   try {
     const result = await User.findOne<UserI>({ _id: id });
