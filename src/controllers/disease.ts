@@ -23,18 +23,27 @@ export const checkSymptoms = async (req: Request, res: Response) => {
     },
   };
 
+  const query2 = {
+    symptoms: {
+      $in: regexPatterns,
+    },
+  };
+
   // Find diseases that match the partial symptoms
-  const result = await Disease.find(query).populate("category"); // If you want to populate the category field
+
+  let result = await Disease.find(query).populate("category"); // If you want to populate the category field
+  if (!result.length) {
+    result = await Disease.find(query2).populate("category");
+  }
+
   const categories = new Set();
 
-  result.forEach((disease) => categories.add(disease?.category?.id));
+  result.forEach((disease) => categories.add(disease?.category));
   const catArray = [...categories];
 
   const doctors = await User.find({ specialty: { $in: catArray } }).populate(
     "specialty"
   );
-
-  console.log(doctors);
 
   res.json({ diseases: result, doctors });
 };

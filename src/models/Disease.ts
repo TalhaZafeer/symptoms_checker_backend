@@ -16,13 +16,15 @@ const DiseaseSchema = new Schema(
         required: true,
       },
     ],
-    medications: {
-      type: {
-        name: String,
-        dosage: String,
-        frequency: String,
+    medications: [
+      {
+        type: {
+          name: String,
+          dosage: String,
+          frequency: String,
+        },
       },
-    },
+    ],
   },
   { timestamps: true }
 );
