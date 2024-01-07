@@ -54,7 +54,6 @@ export const bookAppointment: RequestHandler = async (
 
 export const findUser: RequestHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
-  console.log(req.params);
 
   try {
     const result = await User.findOne<UserI>({ _id: id });
@@ -70,6 +69,7 @@ export const findDoctors: RequestHandler = async (
 ) => {
   try {
     const result = await User.find({ role: "Doctor" });
+
     if (result) {
       res.status(200).json(result);
     }
