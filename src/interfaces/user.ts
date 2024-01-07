@@ -9,7 +9,7 @@ interface UserI {
   availability: DoctorAvailability;
   password: string;
   role: string;
-  location: string;
+  address: string;
   specialty: mongoose.Types.ObjectId;
   appointments: Appointment[];
 }

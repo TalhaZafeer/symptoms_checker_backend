@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
 import { Booking } from "../models/Booking";
 import { User } from "../models";
+import dayjs from "dayjs";
 
 export const getBookings: RequestHandler = async (
   req: Request,
@@ -20,10 +21,11 @@ export const getAvailableTimeSlots: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { doctor, date } = req.body;
+  const { doctor } = req.body;
+  const date = dayjs(req.body.date).format("MMM ddd, YYYY");
 
   try {
-    const bookings = await Booking.find({ user: doctor, date });
+    const bookings = await Booking.find({ bookingWith: doctor, date });
     const bookedTimeSlots = bookings?.map((booking) => booking.timeSlot);
 
     const user = await User.findOne({ _id: doctor });
@@ -31,7 +33,7 @@ export const getAvailableTimeSlots: RequestHandler = async (
       (timeSlot) => !bookedTimeSlots.includes(timeSlot)
     );
 
-    res.status(200).json(freeSlots);
+    res.status(200).json({ bookedTimeSlots, freeSlots, user });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -41,10 +43,10 @@ export const bookAppointment: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  //   const { user, date, timeSlot, bookingWith } = req.body;
+  const date = dayjs(req.body.date).format("MMM ddd, YYYY");
 
   try {
-    const bookedAppointment = await Booking.create(req.body);
+    const bookedAppointment = await Booking.create({ ...req.body, date });
     res.status(200).json(bookedAppointment);
   } catch (error) {
     res.status(500).json(error);

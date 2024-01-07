@@ -69,7 +69,7 @@ const UserSchema = new Schema<UserI, UserModel>({
       },
     },
   ],
-  location: {
+  address: {
     type: String,
   },
   specialty: {
