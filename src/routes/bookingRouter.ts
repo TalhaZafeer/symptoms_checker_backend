@@ -7,8 +7,8 @@ import {
 
 const bookingRouter = Router();
 
-bookingRouter.get("/", getBookings);
 bookingRouter.post("/create", bookAppointment);
-bookingRouter.get("/availableSlots", getAvailableTimeSlots);
+bookingRouter.post("/availableSlots", getAvailableTimeSlots);
+bookingRouter.get("/:id", getBookings);
 
 export default bookingRouter;

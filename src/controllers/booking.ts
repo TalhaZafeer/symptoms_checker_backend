@@ -7,10 +7,10 @@ export const getBookings: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { user } = req.body;
+  const { id } = req.params;
 
   try {
-    const bookings = await Booking.find({ user });
+    const bookings = await Booking.find({ user: id });
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json(error);
@@ -21,11 +21,14 @@ export const getAvailableTimeSlots: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { doctor } = req.body;
-  const date = dayjs(req.body.date).format("MMM ddd, YYYY");
+  const { doctor, date } = req.body;
+  const formattedDate = dayjs(date).format("MMM ddd, YYYY");
 
   try {
-    const bookings = await Booking.find({ bookingWith: doctor, date });
+    const bookings = await Booking.find({
+      bookingWith: doctor,
+      date: formattedDate,
+    });
     const bookedTimeSlots = bookings?.map((booking) => booking.timeSlot);
 
     const user = await User.findOne({ _id: doctor });
