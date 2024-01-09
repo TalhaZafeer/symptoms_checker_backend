@@ -35,12 +35,12 @@ export const getAvailableTimeSlots: RequestHandler = async (
   res: Response
 ) => {
   const { doctor, date } = req.body;
-  // const formattedDate = dayjs(date).format("MMM ddd, YYYY");
 
   try {
     const bookings = await Booking.find({
       bookingWith: doctor,
       date: date,
+      isValid: true,
     });
     const bookedTimeSlots = bookings?.map((booking) => booking.timeSlot);
 
@@ -74,8 +74,6 @@ export const bookAppointment: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  // const date = dayjs(req.body.date).format("MMM ddd, YYYY");
-
   try {
     const bookedAppointment = await Booking.create({
       ...req.body,
