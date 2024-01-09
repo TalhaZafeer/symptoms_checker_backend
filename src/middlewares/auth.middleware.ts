@@ -6,8 +6,13 @@ import RequestWithUser from "../interfaces/requestWithUser";
 const jwt = require("jsonwebtoken");
 
 const checkUser = (req: RequestWithUser, res: Response, next: NextFunction) => {
-  const token = req.cookies.token;
-
+  let token;
+  if (req.headers.authorization) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+  // || req?.cookies;
+  console.log(token);
+  console.log(req.headers);
   if (token) {
     jwt.verify(
       token,
