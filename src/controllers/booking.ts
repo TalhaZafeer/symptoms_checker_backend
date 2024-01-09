@@ -9,10 +9,12 @@ export const getBookings: RequestHandler = async (
 ) => {
   const { id } = req.params;
 
-  await createMeeting("testing", "1", new Date());
+  // await createMeeting("testing", "1", new Date());
 
   try {
-    const bookings = await Booking.find({ user: id });
+    const bookings = await Booking.find({ user: id })
+      .populate("user", "name")
+      .populate("bookingWith", "name");
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json(error);
