@@ -18,6 +18,10 @@ const BookingSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    isValid: {
+      type: Boolean,
+      required: true,
+    },
   },
   { timestamps: true }
 );

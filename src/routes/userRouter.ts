@@ -16,6 +16,7 @@ userRouter.get("/category", findCategoryDoctors);
 userRouter.get("/doctors", findDoctors);
 userRouter.get("/getTimeSlots", getAvailableSlots);
 userRouter.patch("/bookAppointment", bookAppointment);
+
 userRouter.get("/:id", findUser);
 
 userRouter.patch("/update", updateUser);

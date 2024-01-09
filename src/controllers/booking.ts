@@ -1,13 +1,15 @@
 import { Request, RequestHandler, Response } from "express";
 import { Booking } from "../models/Booking";
 import { User } from "../models";
-import dayjs from "dayjs";
+import { createMeeting } from "../utils/zoom";
 
 export const getBookings: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   const { id } = req.params;
+
+  await createMeeting("testing", "1", new Date());
 
   try {
     const bookings = await Booking.find({ user: id });
@@ -41,6 +43,21 @@ export const getAvailableTimeSlots: RequestHandler = async (
     res.status(500).json(error);
   }
 };
+export const cancelAppointment: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.body;
+  try {
+    const result = await Booking.findByIdAndUpdate(
+      { _id: id },
+      { isValid: false }
+    );
+    res.status(200).json(result);
+  } catch (error: any) {
+    res.status(500).json(error.message);
+  }
+};
 
 export const bookAppointment: RequestHandler = async (
   req: Request,
@@ -49,7 +66,10 @@ export const bookAppointment: RequestHandler = async (
   // const date = dayjs(req.body.date).format("MMM ddd, YYYY");
 
   try {
-    const bookedAppointment = await Booking.create({ ...req.body });
+    const bookedAppointment = await Booking.create({
+      ...req.body,
+      isValid: true,
+    });
     res.status(200).json(bookedAppointment);
   } catch (error) {
     res.status(500).json(error);
