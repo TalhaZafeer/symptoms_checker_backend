@@ -6,7 +6,7 @@ import RequestWithUser from "../interfaces/requestWithUser";
 const jwt = require("jsonwebtoken");
 
 const checkUser = (req: RequestWithUser, res: Response, next: NextFunction) => {
-  const token = req.cookies.conduitToken;
+  const token = req.cookies.token;
 
   if (token) {
     jwt.verify(

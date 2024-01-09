@@ -2,20 +2,29 @@ import { Request, RequestHandler, Response } from "express";
 import { Booking } from "../models/Booking";
 import { User } from "../models";
 import { createMeeting } from "../utils/zoom";
+import RequestWithUser from "../interfaces/requestWithUser";
 
 export const getBookings: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   const { id } = req.params;
+  const { user } = req as Request & RequestWithUser;
 
   // await createMeeting("testing", "1", new Date());
 
   try {
-    const bookings = await Booking.find({ user: id })
-      .populate("user", "name")
-      .populate("bookingWith", "name");
-    res.status(200).json(bookings);
+    if (user.role === "Patient") {
+      const bookings = await Booking.find({ user: id })
+        .populate("user", "name")
+        .populate("bookingWith", "name");
+      res.status(200).json(bookings);
+    } else if (user.role === "Doctor") {
+      const bookings = await Booking.find({ bookingWith: id })
+        .populate("user", "name")
+        .populate("bookingWith", "name");
+      res.status(200).json(bookings);
+    }
   } catch (error) {
     res.status(500).json(error);
   }
