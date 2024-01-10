@@ -10,7 +10,7 @@ import {
 const userRouter = Router();
 
 userRouter.get("/", userData);
-userRouter.get("/category", findCategoryDoctors);
+userRouter.post("/category", findCategoryDoctors);
 userRouter.get("/doctors", findDoctors);
 
 userRouter.get("/:id", findUser);

@@ -49,10 +49,7 @@ const BookingSchema = new Schema(
     ],
     surgeries: [
       {
-        type: {
-          name: String,
-          count: String,
-        },
+        type: String,
       },
     ],
   },
