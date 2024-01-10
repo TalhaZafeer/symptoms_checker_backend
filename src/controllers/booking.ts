@@ -11,8 +11,6 @@ export const getBookings: RequestHandler = async (
   const { id } = req.params;
   const { user } = req as Request & RequestWithUser;
 
-  await createMeeting();
-
   try {
     if (user.role === "Patient") {
       const bookings = await Booking.find({ user: id })
@@ -79,8 +77,11 @@ export const bookAppointment: RequestHandler = async (
     if (req.body.bookingTye === "Video Consultation") {
       zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
     }
+
+    console.log(zoomMeeting);
     const bookedAppointment = await Booking.create({
       ...req.body,
+      date: new Date(),
       isValid: true,
       zoomMeeting,
     });
