@@ -41,6 +41,9 @@ export const checkSymptoms = async (req: Request, res: Response) => {
   result.forEach((disease) => categories.add(disease?.category));
   const catArray = [...categories];
 
+  console.log("categories", categories);
+  console.log("array", catArray);
+
   const doctors = await User.find({ specialty: { $in: catArray } }).populate(
     "specialty"
   );

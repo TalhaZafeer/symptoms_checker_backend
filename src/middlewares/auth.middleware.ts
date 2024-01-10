@@ -9,10 +9,10 @@ const checkUser = (req: RequestWithUser, res: Response, next: NextFunction) => {
   let token;
   if (req.headers.authorization) {
     token = req.headers.authorization.split(" ")[1];
+  } else {
+    token = req.cookies.token;
   }
-  // || req?.cookies;
-  console.log(token);
-  console.log(req.headers);
+
   if (token) {
     jwt.verify(
       token,

@@ -11,7 +11,7 @@ export const getBookings: RequestHandler = async (
   const { id } = req.params;
   const { user } = req as Request & RequestWithUser;
 
-  // await createMeeting("testing", "1", new Date());
+  await createMeeting();
 
   try {
     if (user.role === "Patient") {
@@ -75,9 +75,14 @@ export const bookAppointment: RequestHandler = async (
   res: Response
 ) => {
   try {
+    let zoomMeeting;
+    if (req.body.bookingTye === "Video Consultation") {
+      zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
+    }
     const bookedAppointment = await Booking.create({
       ...req.body,
       isValid: true,
+      zoomMeeting,
     });
     res.status(200).json(bookedAppointment);
   } catch (error) {

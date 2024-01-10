@@ -22,6 +22,13 @@ const BookingSchema = new Schema(
       type: Boolean,
       required: true,
     },
+    bookingType: {
+      type: String,
+      required: true,
+    },
+    zoomMeeting: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
