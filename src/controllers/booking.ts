@@ -74,8 +74,9 @@ export const bookAppointment: RequestHandler = async (
 ) => {
   try {
     let zoomMeeting;
-    if (req.body.bookingTye === "Video Consultation") {
+    if (req.body.bookingType === "Video Consultation") {
       zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
+      console.log(zoomMeeting);
     }
 
     console.log(zoomMeeting);

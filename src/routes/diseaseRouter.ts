@@ -4,6 +4,6 @@ import { addDisease, checkSymptoms } from "../controllers/disease";
 const diseaseRouter = Router();
 
 diseaseRouter.post("/", checkSymptoms);
-diseaseRouter.post("/", addDisease);
+diseaseRouter.post("/add", addDisease);
 
 export default diseaseRouter;

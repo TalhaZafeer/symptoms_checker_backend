@@ -8,9 +8,9 @@ const zoomTokenLink =
   "https://zoom.us/oauth/token?grant_type=account_credentials&account_id=RBkiXXavTfG0crb-6qVGqw";
 
 export async function createMeeting(
-  topic?: string,
-  duration?: any,
-  start_time?: any
+  topic: string,
+  duration: any,
+  start_time: any
 ) {
   try {
     const authResponse = await axios.post(
@@ -36,12 +36,10 @@ export async function createMeeting(
       "Content-Type": "application/json",
     };
 
-    const startTime = `${"2021-10-10"}T10:${"10 AM"}`;
-
     const payload = {
-      topic: "topic",
-      duration: 60,
-      start_time: startTime,
+      topic: topic,
+      duration: duration,
+      start_time: start_time,
       type: 2,
     };
 
@@ -56,17 +54,7 @@ export async function createMeeting(
 
     const response_data = meetingResponse.data;
 
-    const content = {
-      meeting_url: response_data.join_url,
-      password: response_data.password,
-      meetingTime: response_data.start_time,
-      purpose: response_data.topic,
-      duration: response_data.duration,
-      message: "Success",
-      status: 1,
-    };
-
-    console.log(content);
+    return response_data.start_url;
   } catch (error: any) {
     console.error(error);
   }
