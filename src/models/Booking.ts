@@ -29,6 +29,32 @@ const BookingSchema = new Schema(
     zoomMeeting: {
       type: String,
     },
+    lastDoctor: {
+      type: String,
+    },
+    medicalConditions: [
+      {
+        type: String,
+      },
+    ],
+    currentMedications: [
+      {
+        type: String,
+      },
+    ],
+    medicalTests: [
+      {
+        type: String,
+      },
+    ],
+    surgeries: [
+      {
+        type: {
+          name: String,
+          count: String,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
