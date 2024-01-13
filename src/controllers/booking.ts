@@ -3,6 +3,13 @@ import { Booking } from "../models/Booking";
 import { User } from "../models";
 import { createMeeting } from "../utils/zoom";
 import RequestWithUser from "../interfaces/requestWithUser";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: "dd7khyujo",
+  api_key: "971462388416415",
+  api_secret: "YU9V13RdHwWXVkRHbXUD_lfzp0A",
+});
 
 export const getBookings: RequestHandler = async (
   req: Request,
@@ -72,6 +79,30 @@ export const bookAppointment: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
+  if (req.files)
+    try {
+      const files = req.files as MulterFile[];
+
+      const uploadPromises = files.map((file: MulterFile) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.v2.uploader
+            .upload_stream({ resource_type: "auto" }, (error, result) => {
+              if (error) {
+                reject(error);
+              }
+              resolve(result);
+            })
+            .end(file.buffer);
+        });
+      });
+
+      const results = await Promise.all(uploadPromises);
+      res.json(results);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+
   try {
     let zoomMeeting;
     if (req.body.bookingType === "Video Consultation") {

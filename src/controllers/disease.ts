@@ -6,6 +6,7 @@ import { User } from "../models";
 export const addDisease = async (req: Request, res: Response) => {
   try {
     const disease = await Disease.create(req.body);
+    res.status(200).json(disease);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
