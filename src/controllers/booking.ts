@@ -80,46 +80,47 @@ export const bookAppointment: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
+  let reports: string[] = [];
   if (req.files)
-    // try {
-    //   const files = req.files as Multer[];
-
-    //   const uploadPromises = files.map((file: Multer) => {
-    //     return new Promise((resolve, reject) => {
-    //       cloudinary.v2.uploader
-    //         .upload_stream({ resource_type: "auto" }, (error, result) => {
-    //           if (error) {
-    //             reject(error);
-    //           }
-    //           resolve(result);
-    //         })
-    //         .end(file.buffer);
-    //     });
-    //   });
-
-    //   const results = await Promise.all(uploadPromises);
-    //   res.json(results);
-    // } catch (error) {
-    //   console.error(error);
-    //   res.status(500).json({ error: "Internal Server Error" });
-    // }
-
     try {
-      let zoomMeeting;
-      if (req.body.bookingType === "Video Consultation") {
-        zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
-        console.log(zoomMeeting);
-      }
+      const files = req.files as Express.Multer.File[];
 
-      console.log(zoomMeeting);
-      const bookedAppointment = await Booking.create({
-        ...req.body,
-        date: new Date(),
-        isValid: true,
-        zoomMeeting,
+      const uploadPromises = files.map((file) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream({ resource_type: "auto" }, (error, result) => {
+              if (error) {
+                reject(error);
+              }
+              resolve(result);
+            })
+            .end(file.buffer);
+        });
       });
-      res.status(200).json(bookedAppointment);
+
+      const results = await Promise.all(uploadPromises);
+      results.forEach((result: any) => reports.push(result.url));
     } catch (error) {
-      res.status(500).json(error);
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
+
+  try {
+    let zoomMeeting;
+    if (req.body.bookingType === "Video Consultation") {
+      zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
+      console.log(zoomMeeting);
+    }
+
+    const bookedAppointment = await Booking.create({
+      ...req.body,
+      reports,
+      date: new Date(),
+      isValid: true,
+      zoomMeeting,
+    });
+    res.status(200).json(bookedAppointment);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };

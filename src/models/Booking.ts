@@ -52,6 +52,11 @@ const BookingSchema = new Schema(
         type: String,
       },
     ],
+    reports: [
+      {
+        type: String,
+      },
+    ],
   },
   { timestamps: true }
 );
