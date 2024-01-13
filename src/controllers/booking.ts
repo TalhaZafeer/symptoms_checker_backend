@@ -4,6 +4,7 @@ import { User } from "../models";
 import { createMeeting } from "../utils/zoom";
 import RequestWithUser from "../interfaces/requestWithUser";
 import { v2 as cloudinary } from "cloudinary";
+import { Multer } from "multer";
 
 cloudinary.config({
   cloud_name: "dd7khyujo",
@@ -80,45 +81,45 @@ export const bookAppointment: RequestHandler = async (
   res: Response
 ) => {
   if (req.files)
+    // try {
+    //   const files = req.files as Multer[];
+
+    //   const uploadPromises = files.map((file: Multer) => {
+    //     return new Promise((resolve, reject) => {
+    //       cloudinary.v2.uploader
+    //         .upload_stream({ resource_type: "auto" }, (error, result) => {
+    //           if (error) {
+    //             reject(error);
+    //           }
+    //           resolve(result);
+    //         })
+    //         .end(file.buffer);
+    //     });
+    //   });
+
+    //   const results = await Promise.all(uploadPromises);
+    //   res.json(results);
+    // } catch (error) {
+    //   console.error(error);
+    //   res.status(500).json({ error: "Internal Server Error" });
+    // }
+
     try {
-      const files = req.files as MulterFile[];
+      let zoomMeeting;
+      if (req.body.bookingType === "Video Consultation") {
+        zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
+        console.log(zoomMeeting);
+      }
 
-      const uploadPromises = files.map((file: MulterFile) => {
-        return new Promise((resolve, reject) => {
-          cloudinary.v2.uploader
-            .upload_stream({ resource_type: "auto" }, (error, result) => {
-              if (error) {
-                reject(error);
-              }
-              resolve(result);
-            })
-            .end(file.buffer);
-        });
-      });
-
-      const results = await Promise.all(uploadPromises);
-      res.json(results);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-
-  try {
-    let zoomMeeting;
-    if (req.body.bookingType === "Video Consultation") {
-      zoomMeeting = await createMeeting("Consultation", 60, req.body.date);
       console.log(zoomMeeting);
+      const bookedAppointment = await Booking.create({
+        ...req.body,
+        date: new Date(),
+        isValid: true,
+        zoomMeeting,
+      });
+      res.status(200).json(bookedAppointment);
+    } catch (error) {
+      res.status(500).json(error);
     }
-
-    console.log(zoomMeeting);
-    const bookedAppointment = await Booking.create({
-      ...req.body,
-      date: new Date(),
-      isValid: true,
-      zoomMeeting,
-    });
-    res.status(200).json(bookedAppointment);
-  } catch (error) {
-    res.status(500).json(error);
-  }
 };
